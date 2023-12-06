@@ -1,14 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace _1
 {
     public partial class Form1 : Form
     {
-
         private int elapsedSeconds = 0;
         private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         private DateTime startTime;
         private SquareGenerator squareGenerator = new SquareGenerator();
-        private List<Rectangle> squares;
-
+        private List<SquareGenerator.SquareInfo> squares;
 
         public Form1()
         {
@@ -21,7 +24,6 @@ namespace _1
             timer.Interval = 1000; // Interwa³ czasowy w milisekundach (tutaj 1 sekunda)
             timer.Tick += timer1_Tick;
         }
-
 
         private void UpdateTimerLabel()
         {
@@ -41,18 +43,16 @@ namespace _1
             UpdateTimerLabel();
         }
 
-
-
-
-
         private void button1_Click(object sender, EventArgs e)
         {
-            int numberOfSquares = 10; // Iloœæ kwadratów do wygenerowania
-            int size = 150; // Rozmiar kwadratu
+            int numberOfSquares = 7;
+            int size = 150;
 
-            squares = squareGenerator.GenerateRandomSquares(numberOfSquares, size, ClientSize);
+            squares = squareGenerator.GeneratePredefinedSquares(size, ClientSize);
 
-            Refresh(); // Odœwie¿ formularz, aby narysowaæ kwadraty
+            // Dodaj to, aby odœwie¿yæ formularz i wywo³aæ OnPaint
+            Invalidate();
+
             start.Visible = false;
 
             // Ustaw czas pocz¹tkowy
@@ -84,9 +84,9 @@ namespace _1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
 
+       
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -94,11 +94,26 @@ namespace _1
             // Rysuj obrysy kwadratów na formularzu
             if (squares != null)
             {
-                foreach (Rectangle square in squares)
+                foreach (var squareInfo in squares)
                 {
-                    e.Graphics.DrawRectangle(Pens.Black, square);
+                    e.Graphics.DrawRectangle(Pens.Black, squareInfo.Rectangle);
+
+                    // Rysuj dzia³anie matematyczne wewn¹trz kwadratu
+                    string displayText = $"{squareInfo.MathOperation}";
+                    DrawTextInCenter(e.Graphics, squareInfo.Rectangle, displayText);
                 }
             }
+        }
+
+        private void DrawTextInCenter(Graphics g, Rectangle rectangle, string text)
+        {
+            StringFormat stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            g.DrawString(text, Font, Brushes.Black, rectangle, stringFormat);
         }
     }
 }
