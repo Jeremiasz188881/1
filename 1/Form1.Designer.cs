@@ -29,30 +29,34 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             start = new Button();
             wyjscie = new Button();
             timer1 = new System.Windows.Forms.Timer(components);
             czas = new Label();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            textBox1 = new TextBox();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // start
             // 
-            start.Location = new Point(463, 155);
+            start.Image = (Image)resources.GetObject("start.Image");
+            start.Location = new Point(530, 175);
             start.Name = "start";
-            start.Size = new Size(273, 122);
+            start.Size = new Size(199, 64);
             start.TabIndex = 0;
-            start.Text = "Start";
             start.UseVisualStyleBackColor = true;
             start.Click += button1_Click;
             // 
             // wyjscie
             // 
-            wyjscie.Location = new Point(1, 1);
+            wyjscie.BackgroundImage = (Image)resources.GetObject("wyjscie.BackgroundImage");
+            wyjscie.Location = new Point(-2, -5);
             wyjscie.Name = "wyjscie";
-            wyjscie.Size = new Size(111, 51);
+            wyjscie.Size = new Size(177, 69);
             wyjscie.TabIndex = 1;
-            wyjscie.Text = "Wyjście";
             wyjscie.UseVisualStyleBackColor = true;
             wyjscie.Click += button2_Click;
             // 
@@ -65,21 +69,44 @@
             czas.AutoSize = true;
             czas.Location = new Point(1196, 1);
             czas.Name = "czas";
-            czas.Size = new Size(39, 20);
+            czas.Size = new Size(0, 20);
             czas.TabIndex = 2;
-            czas.Text = "Czas";
+            // 
+            // textBox1
+            // 
+            textBox1.BackColor = SystemColors.HotTrack;
+            textBox1.BorderStyle = BorderStyle.None;
+            textBox1.Font = new Font("Yu Gothic", 13.8F, FontStyle.Bold, GraphicsUnit.Point);
+            textBox1.Location = new Point(148, 275);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(985, 116);
+            textBox1.TabIndex = 3;
+            textBox1.Text = "Połącz wszystkie kwadraty, których wynik działania matematycznego jest taki sam. \r\n                                         Ścieżki nie mogą się przecinać. \r\n ";
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(207, 339);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(1091, 492);
+            pictureBox1.TabIndex = 4;
+            pictureBox1.TabStop = false;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.HotTrack;
             ClientSize = new Size(1262, 977);
+            Controls.Add(pictureBox1);
+            Controls.Add(textBox1);
             Controls.Add(czas);
             Controls.Add(wyjscie);
             Controls.Add(start);
             Name = "Form1";
-            Text = "Form1";
-            
+            Text = "Gra Matematyczna";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -91,5 +118,7 @@
         private System.Windows.Forms.Timer timer1;
         private Label czas;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private TextBox textBox1;
+        private PictureBox pictureBox1;
     }
 }

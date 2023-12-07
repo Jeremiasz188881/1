@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Media;
 
 namespace _1
 {
@@ -12,11 +13,19 @@ namespace _1
         private DateTime startTime;
         private SquareGenerator squareGenerator = new SquareGenerator();
         private List<SquareGenerator.SquareInfo> squares;
+        private SquareController squareController;
+        private SoundPlayer soundPlayer;
 
         public Form1()
         {
             InitializeComponent();
             InitializeTimer();
+            squareController = new SquareController(this, squares);
+            this.Paint += MainForm_Paint;
+            this.MouseClick += MainForm_MouseClick;
+            this.KeyDown += Form1_KeyDown;
+            InitializeSoundPlayer();
+
         }
 
         private void InitializeTimer()
@@ -50,35 +59,36 @@ namespace _1
 
             squares = squareGenerator.GeneratePredefinedSquares(size, ClientSize);
 
-            // Dodaj to, aby odœwie¿yæ formularz i wywo³aæ OnPaint
             Invalidate();
 
             start.Visible = false;
+            textBox1.Visible = false;
+            pictureBox1.Visible = false;
 
-            // Ustaw czas pocz¹tkowy
             startTime = DateTime.Now;
 
-            // Uruchom Timer
+            PlayButtonClickSound();
+
             timer.Start();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            // Zatrzymaj Timer
+            
             timer.Stop();
             czas.Visible = false;
-            // Wyœwietl czas w MessageBox
+          
             ShowTimeInMessageBox();
             Application.Exit();
         }
 
         private void ShowTimeInMessageBox()
         {
-            // Przekszta³æ elapsedSeconds na format hh:mm:ss
+           
             TimeSpan elapsedTime = DateTime.Now - startTime;
             string formattedTime = elapsedTime.ToString(@"hh\:mm\:ss");
 
-            // Wyœwietl czas w MessageBox
+           
             MessageBox.Show("Aktualny czas: " + formattedTime, "Czas", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -86,24 +96,40 @@ namespace _1
         {
         }
 
-       
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            // Rysuj obrysy kwadratów na formularzu
+            
             if (squares != null)
             {
                 foreach (var squareInfo in squares)
                 {
                     e.Graphics.DrawRectangle(Pens.Black, squareInfo.Rectangle);
 
-                    // Rysuj dzia³anie matematyczne wewn¹trz kwadratu
+                    
                     string displayText = $"{squareInfo.MathOperation}";
                     DrawTextInCenter(e.Graphics, squareInfo.Rectangle, displayText);
                 }
             }
+
+            squareController.DrawLine(e.Graphics);
         }
+
+
+        private void MainForm_Paint(object sender, PaintEventArgs e)
+        {
+            if (squares != null)
+            {
+                foreach (SquareGenerator.SquareInfo squareInfo in squares)
+                {
+                    e.Graphics.DrawRectangle(Pens.Black, squareInfo.Rectangle);
+                }
+            }
+
+            squareController.DrawLine(e.Graphics);
+        }
+
 
         private void DrawTextInCenter(Graphics g, Rectangle rectangle, string text)
         {
@@ -115,5 +141,28 @@ namespace _1
 
             g.DrawString(text, Font, Brushes.Black, rectangle, stringFormat);
         }
+        private void MainForm_MouseClick(object sender, MouseEventArgs e)
+        {
+            squareController.HandleMouseClick(e.Location);
+            Invalidate();  
+        }
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            squareController.HandleKeyDown(e.KeyCode);
+        }
+
+        private void InitializeSoundPlayer()
+        {
+            
+            soundPlayer = new SoundPlayer("czesc.wav");
+        }
+        private void PlayButtonClickSound()
+        {
+            if (soundPlayer != null)
+            {
+                soundPlayer.Play();
+            }
+        }
+
     }
 }

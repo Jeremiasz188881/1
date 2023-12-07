@@ -10,7 +10,7 @@ namespace _1
     {
         public static string[] GetPredefinedOperations()
         {
-            // Tutaj możesz definiować i zwracać różne operacje matematyczne
+           
             return new string[] { "2+2", "6-2", "1+1", "1*2", "3*2", "6/2", "1*3" };
         }
     }

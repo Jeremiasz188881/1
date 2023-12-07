@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using static _1.SquareGenerator.SquareInfo;
 
 namespace _1
 {
@@ -8,7 +9,7 @@ namespace _1
     {
         private List<SquareInfo> squares = new List<SquareInfo>();
         private Random random = new Random();
-
+     
         public List<SquareInfo> GeneratePredefinedSquares(int size, Size formSize)
         {
             squares.Clear();
@@ -16,27 +17,35 @@ namespace _1
             string[] predefinedOperations = MathOperations.GetPredefinedOperations();
             int numberOfSquares = predefinedOperations.Length;
 
+         
             for (int i = 0; i < numberOfSquares; i++)
             {
-                string mathOperation = predefinedOperations[i % predefinedOperations.Length]; // Cykliczne pobieranie działań
+                string mathOperation = predefinedOperations[i % predefinedOperations.Length]; 
 
-                // Generuj losowe współrzędne dla lewego górnego rogu kwadratu
+              
                 int x = random.Next(0, formSize.Width - size);
                 int y = random.Next(0, formSize.Height - size);
 
                 Rectangle square = new Rectangle(x, y, size, size);
 
-                // Stwórz obiekt SquareInfo, aby przechować informacje o kwadracie
+                
                 SquareInfo squareInfo = new SquareInfo(square, mathOperation, mathOperation);
 
-                // Sprawdź, czy nowy kwadrat nie nachodzi na inne kwadraty
                 if (IsSquareOverlapping(squareInfo))
                 {
-                    i--; // Jeśli nachodzi, powtórz próbę dla tego samego indeksu
+                    i--; 
                 }
                 else
                 {
                     squares.Add(squareInfo);
+                }
+            }
+
+            if (squares != null)
+            {
+                foreach (SquareInfo squareInfo in squares)
+                {
+                    Console.WriteLine($"Square area: {squareInfo.Rectangle}");
                 }
             }
 
@@ -61,13 +70,14 @@ namespace _1
             public string MathOperation { get; }
             public string TwinMathOperation { get; }
             public SquarePosition Position { get; set; }
-
+            public Color BorderColor { get; set; }
             public SquareInfo(Rectangle rectangle, string mathOperation, string twinMathOperation)
             {
                 Rectangle = rectangle;
                 MathOperation = mathOperation;
                 TwinMathOperation = twinMathOperation;
                 Position = SquarePosition.Top;
+                BorderColor = Color.Black; 
             }
 
             public enum SquarePosition
@@ -78,5 +88,22 @@ namespace _1
                 Right
             }
         }
+        public static SquarePosition SquarePositionFromKey(Keys key)
+        {
+            switch (key)
+            {
+                case Keys.W:
+                    return SquarePosition.Top;
+                case Keys.A:
+                    return SquarePosition.Left;
+                case Keys.S:
+                    return SquarePosition.Bottom;
+                case Keys.D:
+                    return SquarePosition.Right;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        
     }
 }
